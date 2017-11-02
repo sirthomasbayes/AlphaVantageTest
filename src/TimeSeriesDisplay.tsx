@@ -1,6 +1,19 @@
 import * as React from 'react';
 import { TimeSeriesMetadataTable, TimeSeriesDataTable } from './TimeSeriesDisplayComponents'; 
-import { ITimeSeriesData, IApiProvider, IMetadata, TimeoutError, ApiError } from './IApiProvider';
+import { ITimeSeriesData, IApiProvider, IMetadata, TimeoutError, ApiError } from './api_provider/IApiProvider';
+
+/*
+	exported components:
+
+	<TimeSeriesDisplay apiProvider={ IApiProvider }
+					   maxRetry={ number } /> 
+    	displays TimeSeries data pulled from IApiProvider given by apiProvider.
+    	if call times out, it will be retried maxRetry number of times before
+    	hard failing.
+
+    	results are paged (right now hardcoded to pages of size 10, but can easily
+    	be injected as a property)
+*/
 
 interface IProps {
 	apiProvider: IApiProvider;
@@ -16,7 +29,7 @@ interface IState {
 							// if so, used to disable "Fetch Data" button.
 	
 	statusMessage:string;
-	retryAttempt: number;
+	retryCount: number;
 }
 
 export default class TimeSeriesDisplay extends React.Component<IProps, IState> {	
@@ -34,7 +47,7 @@ export default class TimeSeriesDisplay extends React.Component<IProps, IState> {
 			fetchingData: false,
 
 			statusMessage: '',
-			retryAttempt: 0
+			retryCount: 0
 		};
 	}
 
@@ -53,15 +66,15 @@ export default class TimeSeriesDisplay extends React.Component<IProps, IState> {
 		}
 		catch (e) {  
 			if (e instanceof TimeoutError) {
-				let retryAttempt = this.state.retryAttempt + 1,
-					maxRetriesReached = retryAttempt > this.props.maxRetry,
+				let retryCount = this.state.retryCount + 1,
+					maxRetriesReached = retryCount > this.props.maxRetry,
 					statusMessage = !maxRetriesReached ?
-						`Request for time series data has timed out. Retry attempt ${retryAttempt}.` :
+						`Request for time series data has timed out. Retry attempt ${retryCount}.` :
 						`External server is unavailable. Please try again later.`;
 
 				this.setState({ 
 					statusMessage: statusMessage,
-					retryAttempt: maxRetriesReached ? retryAttempt + 1 : 0
+					retryCount: maxRetriesReached ? retryCount + 1 : 0
 				});
 
 				if (!maxRetriesReached) await this.getDataAsync();
@@ -87,7 +100,7 @@ export default class TimeSeriesDisplay extends React.Component<IProps, IState> {
 			lastPageNumber: listSize / pageSize + (listSize % pageSize > 0 ? 1 : 0),
 			currentPageItems: this.currentItems.slice(skip, skip + pageSize),
 			statusMessage: "",
-			retryAttempt: 0
+			retryCount: 0
 		});
 	}
 

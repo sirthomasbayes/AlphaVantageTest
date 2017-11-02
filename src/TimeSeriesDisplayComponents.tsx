@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { IMetadata, ITimeSeriesData } from './IApiProvider'
+import { IMetadata, ITimeSeriesData } from './api_provider/IApiProvider'
 
 /*
-	exported modules:
+	exported components:
 
-	<TimeSeriesMetadataTable metadata={ IMetadata } /> - displays metadata table.
-	<TimeSeriesDataTable dataPoints={ Array<ITimeSeriesData> } /> - displays time series data table.
+	<TimeSeriesMetadataTable metadata={ IMetadata } /> 
+		displays table of IMetadata given by metadata.
+	
+
+	<TimeSeriesDataTable dataPoints={ Array<ITimeSeriesData> } /> 
+		displays time series data table given by dataPoints.	
 */
 
 let isNullOrUndefined = (elem:any) => elem === null || elem === undefined;

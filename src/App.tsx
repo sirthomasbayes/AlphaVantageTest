@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import AlphaVantageApiProvider from './AlphaVantageApiProvider';
+import AlphaVantageApiProvider from './api_provider/AlphaVantageApiProvider';
 import TimeSeriesTable from './TimeSeriesDisplay';
 
 //const logo = require('./logo.svg');

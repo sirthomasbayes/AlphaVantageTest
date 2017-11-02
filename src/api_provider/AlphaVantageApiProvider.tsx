@@ -1,5 +1,12 @@
 import { IApiValue, IMetadata, ITimeSeriesData, IApiProvider, TimeoutError, ApiError } from './IApiProvider';
 
+/*
+	exported classes:
+
+	AlphaVantageApiProvider - implementation of IApiProvider that sources data
+							  from alphavantage.co
+*/
+
 export default class AlphaVantageApiProvider implements IApiProvider {
 	private url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=1min&apikey=demo";
 	

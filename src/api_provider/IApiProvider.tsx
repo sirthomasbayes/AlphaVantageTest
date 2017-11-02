@@ -1,3 +1,27 @@
+/*
+	exported interfaces:
+
+	IApiProvider - represents provider object that will make API call and either
+				   return parsed data (type IApiValue) on success,
+				   or throw a relevant Error.
+
+	IApiValue - represents parsed data structure returned from API
+		* metadata : IMetadata - represents metadata returned from API
+		* timeSeriesData : Array<ITimeSeriesData> - represents time series data returned from API
+
+	IMetadata - represents metadata returned from API
+
+	ITimeSeriesData - represents a single data point in time series returned from API
+*/
+
+/*
+	exported Errors:
+
+	ApiError - represents an error reported by the API (statusCode >= 400)
+
+	TimeoutError - represents an error due to timeout or connection failure.
+*/
+
 interface IApiValue {
 	metadata: IMetadata;
 	timeSeriesData: Array<ITimeSeriesData>;
