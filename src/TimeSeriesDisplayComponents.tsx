@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { IMetadata } from './iApiProvider'
+import { IMetadata } from './IApiProvider'
 
 interface IProps {
 	metadata: IMetadata;
 }
 
-let TimeSeriesMetadataTable = ({ metadata }) => {
+let TimeSeriesMetadataTable = ({ metadata } : IProps) => {
 	let metadataKeys = [];
 
 	for (let key in metadata) metadataKeys.push(key);
@@ -26,4 +26,4 @@ let TimeSeriesMetadataTable = ({ metadata }) => {
 	);	
 };
 
-export default TimeSeriesMetadataTable;
+export { TimeSeriesMetadataTable };

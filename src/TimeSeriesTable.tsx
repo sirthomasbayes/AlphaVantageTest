@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TimeSeriesMetadataTable } from './TimeSeriesDisplayComponents'; 
 import { ITimeSeriesData, IApiProvider, IMetadata, TimeoutError, ApiError } from './IApiProvider';
 
 interface IProps {
@@ -93,24 +94,7 @@ export default class TimeSeriesTable extends React.Component<IProps, IState> {
 	private renderMetadata() {
 		if (!this.currentMetadata) return;
 
-		let metadataKeys = [];
-
-		for (let key in this.currentMetadata) metadataKeys.push(key);
-
-		return (
-			<table>
-				<thead>
-					<tr>
-						{ metadataKeys.map((elem,index) => <th key={`metadata_header_${index}`}>{elem}</th>) }
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						{ metadataKeys.map((elem,index) => <td key={`metadata_value_${index}`}>{this.currentMetadata[elem].toString()}</td>) }
-					</tr>
-				</tbody>
-			</table>
-		);	
+		return <TimeSeriesMetadataTable metadata={this.currentMetadata} />;
 	}
 
 	private renderPageDropdown() {
