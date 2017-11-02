@@ -63,7 +63,7 @@ class TimeoutError extends Error {
 }
 
 interface IApiProvider {
-	getDataAsync() : Promise<IApiValue>;
+	getDataAsync(timeoutInterval:number) : Promise<IApiValue>;
 }
 
 export {

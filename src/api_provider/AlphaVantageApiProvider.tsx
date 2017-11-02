@@ -68,30 +68,31 @@ export default class AlphaVantageApiProvider implements IApiProvider {
 		return data;
 	}
 
-	async getDataAsync() : Promise<IApiValue> {
-		try {
-			let response = await fetch(this.url);
+	// hacky way of handling timeouts via fetch API
+	private timeout (value:number, message:string) : Promise<Response> {
+    	return new Promise((resolve, reject) => {
+        	setTimeout(() => {
+            	reject(new TimeoutError(message));
+        	}, value);
+    	});
+	}
 
-			if (!response.ok) throw new ApiError(response.statusText);
+	async getDataAsync(timeoutInterval: number) : Promise<IApiValue> {
+		let response = await Promise.race([this.timeout(timeoutInterval, 'Request has timed out.'), fetch(this.url)]);
+
+		if (!response.ok) throw new ApiError(response.statusText);
 			
-			let unparsedData = await response.json(),
-				returnData = {};
+		let unparsedData = await response.json(),
+			returnData = {};
 
-			for (let key in unparsedData) {
-				if (key === "Meta Data") returnData["metadata"] = this.getMetadata(unparsedData[key]);
-				else returnData["timeSeriesData"] = this.getTimeSeriesItemData(unparsedData[key]);
-			}
-
-			return {
-				metadata: returnData["metadata"],
-				timeSeriesData: returnData["timeSeriesData"]
-			};
+		for (let key in unparsedData) {
+			if (key === "Meta Data") returnData["metadata"] = this.getMetadata(unparsedData[key]);
+			else returnData["timeSeriesData"] = this.getTimeSeriesItemData(unparsedData[key]);
 		}
-		catch (e) {
-			if (e instanceof ApiError) throw e;
 
-			throw new TimeoutError("Request has timed out.");	// not exactly accurate condition here
-																// will redesign for proper timeout handling if time permits
-		}
+		return {
+			metadata: returnData["metadata"],
+			timeSeriesData: returnData["timeSeriesData"]
+		};
 	}
 }
