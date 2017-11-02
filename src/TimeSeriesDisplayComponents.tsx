@@ -10,7 +10,7 @@ import { IMetadata, ITimeSeriesData } from './IApiProvider'
 
 let isNullOrUndefined = (elem:any) => elem === null || elem === undefined;
 
-// dummy classes created to allow enumeration of interface properties once 
+// dummy class created to allow enumeration of interface properties once 
 // (as opposed to enumerating on every function call)
 class MetadataSchema implements IMetadata {
 	constructor() {
@@ -30,6 +30,8 @@ class MetadataSchema implements IMetadata {
 	timezone: string;	
 }
 
+// dummy class created to allow enumeration of interface properties once 
+// (as opposed to enumerating on every function call)
 class TimeSeriesDataSchema implements ITimeSeriesData {
 	constructor() {
 		this.datetime = new Date();
@@ -46,6 +48,7 @@ class TimeSeriesDataSchema implements ITimeSeriesData {
 	volume:number;
 }
 
+// generating property keys
 let dummyMetadata = new MetadataSchema(),
 	dummyTimeSeriesData = new TimeSeriesDataSchema(),
 	metadataKeys = new Array<string>(),
@@ -60,7 +63,6 @@ interface IMetadataTableProps {
 
 const TimeSeriesMetadataTable = ({ metadata } : IMetadataTableProps) => {
 	if (!metadata) return null;
-	console.log(metadata);
 
 	return (
 		<table>
@@ -83,8 +85,6 @@ interface ITimeSeriesDataPointProps {
 }
 
 const TimeSeriesDataPointRow = ({ dataPoint } : ITimeSeriesDataPointProps) => {
-	console.log(dataPoint);
-
 	return (
 		<tr>
 			{ timeSeriesDataKeys.map((elem, index) => <td key={`timeseries_value_${index}`}>{ !isNullOrUndefined(dataPoint[elem]) ? dataPoint[elem].toString() : '' }</td>) }

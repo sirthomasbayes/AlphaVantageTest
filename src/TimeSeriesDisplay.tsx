@@ -19,7 +19,7 @@ interface IState {
 	retryAttempt: number;
 }
 
-export default class TimeSeriesTable extends React.Component<IProps, IState> {	
+export default class TimeSeriesDisplay extends React.Component<IProps, IState> {	
 	private currentItems : Array<ITimeSeriesData>;
 	private currentMetadata: IMetadata;
 	private pageSize = 10;
@@ -76,7 +76,7 @@ export default class TimeSeriesTable extends React.Component<IProps, IState> {
 	}
 
 	// displays items on page pageNumber by setting
-	// state variables related to paging 
+	// state variables relevant to paging 
 	private displayPage(pageNumber:number) {
 		let listSize = this.currentItems.length,
 			pageSize = this.pageSize,
