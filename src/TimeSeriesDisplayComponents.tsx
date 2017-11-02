@@ -1,11 +1,27 @@
 import * as React from 'react';
 import { IMetadata, ITimeSeriesData } from './IApiProvider'
 
+/*
+	exported modules:
+
+	<TimeSeriesMetadataTable metadata={ IMetadata } /> - displays metadata table.
+	<TimeSeriesDataTable dataPoints={ Array<ITimeSeriesData> } /> - displays time series data table.
+*/
+
 let isNullOrUndefined = (elem:any) => elem === null || elem === undefined;
 
 // dummy classes created to allow enumeration of interface properties once 
 // (as opposed to enumerating on every function call)
 class MetadataSchema implements IMetadata {
+	constructor() {
+		this.information = '';
+		this.symbol = '';
+		this.lastRefreshed = new Date();
+		this.interval = '';
+		this.outputSize = '';
+		this.timezone = '';
+	}
+
 	information:string;
 	symbol: string;
 	lastRefreshed: Date;
@@ -15,6 +31,14 @@ class MetadataSchema implements IMetadata {
 }
 
 class TimeSeriesDataSchema implements ITimeSeriesData {
+	constructor() {
+		this.datetime = new Date();
+		this.open = 1;
+		this.high = 1;
+		this.low = 1;
+		this.volume = 1;
+	}
+
 	datetime:Date;
 	open:number;
 	high:number;
@@ -34,7 +58,10 @@ interface IMetadataTableProps {
 	metadata: IMetadata;
 }
 
-let TimeSeriesMetadataTable = ({ metadata } : IMetadataTableProps) => {
+const TimeSeriesMetadataTable = ({ metadata } : IMetadataTableProps) => {
+	if (!metadata) return null;
+	console.log(metadata);
+
 	return (
 		<table>
 			<thead>
@@ -55,7 +82,9 @@ interface ITimeSeriesDataPointProps {
 	dataPoint: ITimeSeriesData
 }
 
-let TimeSeriesDataPointRow = ({ dataPoint } : ITimeSeriesDataPointProps) => {
+const TimeSeriesDataPointRow = ({ dataPoint } : ITimeSeriesDataPointProps) => {
+	console.log(dataPoint);
+
 	return (
 		<tr>
 			{ timeSeriesDataKeys.map((elem, index) => <td key={`timeseries_value_${index}`}>{ !isNullOrUndefined(dataPoint[elem]) ? dataPoint[elem].toString() : '' }</td>) }
@@ -64,14 +93,18 @@ let TimeSeriesDataPointRow = ({ dataPoint } : ITimeSeriesDataPointProps) => {
 };
 
 interface ITimeSeriesDataTableProps {
-	dataPoints: Array<ITimeSeriesData>;
+	dataPoints?: Array<ITimeSeriesData>;
 }
 
-let TimeSeriesDataTable = ({ dataPoints } : ITimeSeriesDataTableProps) => {
+const TimeSeriesDataTable = ({ dataPoints } : ITimeSeriesDataTableProps) => {
+	if (!dataPoints || dataPoints.length === 0) return null;
+
 	return (
 		<table>
 			<thead>
-				{ timeSeriesDataKeys.map((elem, index) => <tr key={`timeseries_header_${index}`}>{elem}</tr>) }
+				<tr>
+					{ timeSeriesDataKeys.map((elem, index) => <th key={`timeseries_header_${index}`}>{elem}</th>) }
+				</tr>
 			</thead>
 
 			<tbody>

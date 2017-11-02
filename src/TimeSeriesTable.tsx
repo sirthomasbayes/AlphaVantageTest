@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TimeSeriesMetadataTable } from './TimeSeriesDisplayComponents'; 
+import { TimeSeriesMetadataTable, TimeSeriesDataTable } from './TimeSeriesDisplayComponents'; 
 import { ITimeSeriesData, IApiProvider, IMetadata, TimeoutError, ApiError } from './IApiProvider';
 
 interface IProps {
@@ -8,9 +8,9 @@ interface IProps {
 }
 
 interface IState {
-	currentPageNumber: number;	
+	currentPageNumber: number;
+	currentPageItems: Array<ITimeSeriesData>;	
 	lastPageNumber: number;
-	currentPageItems: Array<ITimeSeriesData>;
 	
 	fetchingData: boolean;	// indicates whether we are fetching data from external API
 							// if so, used to disable "Fetch Data" button.
@@ -91,12 +91,6 @@ export default class TimeSeriesTable extends React.Component<IProps, IState> {
 		});
 	}
 
-	private renderMetadata() {
-		if (!this.currentMetadata) return;
-
-		return <TimeSeriesMetadataTable metadata={this.currentMetadata} />;
-	}
-
 	private renderPageDropdown() {
 		if (!this.currentItems) return;
 
@@ -112,42 +106,19 @@ export default class TimeSeriesTable extends React.Component<IProps, IState> {
          	</select>);
 	}
 
-	private renderTable() {
-		if (!this.currentItems) return;
-
-		let timeSeriesKeys = [
-			'datetime', 'open', 'high', 'low', 'volume'
-		],
-			currentPageItems = this.state.currentPageItems;
-
-		return (
-			<table>
-				<thead>
-					<tr>
-						{ timeSeriesKeys.map((elem, index) => <th key={`timeseries_header_${index}`}>{elem}</th>) }
-					</tr>
-				</thead>
-
-				<tbody>
-				{ currentPageItems.map((elem, index) => 
-					<tr key={`timeseries_data_${index}`}>
-						{ timeSeriesKeys.map((innerElem, innerIndex) => <td key={`timeseries_data_${index}_value_${innerIndex}`}>{ elem[innerElem].toString() }</td>) }
-					</tr>) }
-				</tbody>
-			</table>
-		);
-	}
-
 	render() {
+		
 		return (
-			<div>
+			<div key={this.state.currentPageNumber}>
 				<button disabled={this.state.fetchingData} onClick={async () => await this.getDataAsync()}>Fetch Data</button>
 
 				<p style={{'color':'red'}}>{this.state.statusMessage}</p>
 
 				{this.renderPageDropdown()}
-				{this.renderMetadata()}
-				{this.renderTable()}
+				
+				<TimeSeriesMetadataTable metadata={this.currentMetadata} />
+				<br/>
+				<TimeSeriesDataTable dataPoints={this.state.currentPageItems} />
 			</div>
 		);
 	}
