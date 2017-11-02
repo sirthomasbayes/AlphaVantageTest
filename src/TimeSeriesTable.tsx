@@ -12,7 +12,7 @@ interface IState {
 	currentPageItems: Array<ITimeSeriesData>;
 	
 	fetchingData: boolean;	// indicates whether we are fetching data from external API
-							// if so, used to disable 
+							// if so, used to disable "Fetch Data" button.
 	
 	statusMessage:string;
 	retryAttempt: number;
