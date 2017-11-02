@@ -10,7 +10,10 @@ interface IState {
 	currentPageNumber: number;	
 	lastPageNumber: number;
 	currentPageItems: Array<ITimeSeriesData>;
-	fetchingData: boolean;
+	
+	fetchingData: boolean;	// indicates whether we are fetching data from external API
+							// if so, used to disable 
+	
 	statusMessage:string;
 	retryAttempt: number;
 }
@@ -149,10 +152,6 @@ export default class TimeSeriesTable extends React.Component<IProps, IState> {
 				</tbody>
 			</table>
 		);
-	}
-
-	async componentDidMount() {
-		await this.props.apiProvider.getDataAsync();
 	}
 
 	render() {
